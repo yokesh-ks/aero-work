@@ -1,0 +1,36 @@
+{
+  "name": "ingenious-studio",
+  "version": "1.0.0",
+  "description": "Ingenious Studio Monorepo",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "build": "turbo build",
+    "commit": "git-cz",
+    "dev": "turbo dev",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "type-check": "turbo type-check",
+    "clean": "turbo clean"
+  },
+  "keywords": [],
+  "author": {
+    "name": "yokesh-ks"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.9.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "packageManager": "yarn@1.22.22"
+}
