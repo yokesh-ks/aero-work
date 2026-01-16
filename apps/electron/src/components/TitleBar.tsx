@@ -8,7 +8,7 @@ export default function TitleBar() {
         } as React.CSSProperties
       }
     >
-      <div className="px-3 text-sm font-medium tracking-wide">IngeniousStudio</div>
+      <div className="px-3 text-sm font-medium tracking-wide">Aero Work</div>
     </div>
   )
 }

@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@ingenious-studio/ui'
+} from '@aero-work/ui'
 import { useTheme } from '../components/ThemeProvider'
 import logoDark from '../assets/logo.png'
 import logoLight from '../assets/logo-light.png'
@@ -21,10 +21,10 @@ export default function Home() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex justify-center mb-4">
-            <img src={isDark ? logoLight : logoDark} alt="IngeniousStudio" className="w-20 h-20" />
+            <img src={isDark ? logoLight : logoDark} alt="Aero Work" className="w-20 h-20" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            Welcome to IngeniousStudio
+            Welcome to Aero Work
           </CardTitle>
           <CardDescription className="text-center">
             Your creative workspace is ready.

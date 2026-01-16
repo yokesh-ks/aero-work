@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@ingenious-studio/ui'
+} from '@aero-work/ui'
 import { Link } from '@tanstack/react-router'
 
 export default function ErrorPage({ error }: { error?: Error }) {

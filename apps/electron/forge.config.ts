@@ -10,7 +10,7 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses'
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
-    executableName: 'ingenious-studio',
+    executableName: 'aero-work',
     icon: './src/assets/logo-padded',
   },
   rebuildConfig: {},

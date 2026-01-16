@@ -1,7 +1,7 @@
 {
-  "name": "ingenious-studio",
+  "name": "aero-work",
   "version": "1.0.0",
-  "description": "Ingenious Studio Monorepo",
+  "description": "Aero Work Monorepo",
   "private": true,
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
