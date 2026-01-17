@@ -1,12 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@aero-work/ui'
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@aero-work/ui'
 import { FolderGit2, ArrowRight } from 'lucide-react'
 import { useTheme } from '../components/ThemeProvider'
 import logoDark from '../assets/logo.png'
@@ -18,14 +11,12 @@ export default function Home() {
 
   return (
     <div className="flex items-center justify-center p-4 h-full overflow-auto">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md p-6">
         <CardHeader>
           <div className="flex justify-center mb-4">
             <img src={isDark ? logoLight : logoDark} alt="Aero Work" className="w-20 h-20" />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">
-            Welcome to Aero Work
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Welcome to Aero Work</CardTitle>
           <CardDescription className="text-center">
             Your creative workspace is ready.
           </CardDescription>

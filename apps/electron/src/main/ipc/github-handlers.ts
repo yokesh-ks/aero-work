@@ -1,7 +1,7 @@
 /**
  * IPC handlers for GitHub operations
  */
-import { ipcMain, IpcMainInvokeEvent } from 'electron';
+import { ipcMain, IpcMainInvokeEvent } from 'electron'
 import {
   storeGitHubToken,
   getGitHubToken,
@@ -12,8 +12,8 @@ import {
   getRepository,
   validateTokenScopes,
   openOAuthUrl,
-} from '../services/github-service';
-import type { ApiResponse, GitHubRepository, GitHubAuthState } from '../../types/project';
+} from '../services/github-service'
+import type { ApiResponse, GitHubRepository, GitHubAuthState } from '../../types/project'
 
 /**
  * Register all GitHub-related IPC handlers
@@ -26,17 +26,17 @@ export function registerGitHubHandlers(): void {
     'github:storeToken',
     async (_event: IpcMainInvokeEvent, token: string): Promise<ApiResponse<boolean>> => {
       try {
-        const success = await storeGitHubToken(token);
+        const success = await storeGitHubToken(token)
         if (!success) {
-          return { success: false, error: 'Failed to store token securely' };
+          return { success: false, error: 'Failed to store token securely' }
         }
-        return { success: true, data: true };
+        return { success: true, data: true }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Get stored GitHub token (for internal use only)
@@ -45,14 +45,14 @@ export function registerGitHubHandlers(): void {
     'github:getToken',
     async (_event: IpcMainInvokeEvent): Promise<ApiResponse<string | null>> => {
       try {
-        const token = await getGitHubToken();
-        return { success: true, data: token };
+        const token = await getGitHubToken()
+        return { success: true, data: token }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Clear stored GitHub token (logout)
@@ -61,14 +61,14 @@ export function registerGitHubHandlers(): void {
     'github:clearToken',
     async (_event: IpcMainInvokeEvent): Promise<ApiResponse<boolean>> => {
       try {
-        const success = await clearGitHubToken();
-        return { success: true, data: success };
+        const success = await clearGitHubToken()
+        return { success: true, data: success }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Check if authenticated with GitHub
@@ -77,14 +77,14 @@ export function registerGitHubHandlers(): void {
     'github:isAuthenticated',
     async (_event: IpcMainInvokeEvent): Promise<ApiResponse<boolean>> => {
       try {
-        const authenticated = await isAuthenticated();
-        return { success: true, data: authenticated };
+        const authenticated = await isAuthenticated()
+        return { success: true, data: authenticated }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Get GitHub authentication state
@@ -93,14 +93,14 @@ export function registerGitHubHandlers(): void {
     'github:getAuthState',
     async (_event: IpcMainInvokeEvent): Promise<ApiResponse<GitHubAuthState>> => {
       try {
-        const state = await getAuthState();
-        return { success: true, data: state };
+        const state = await getAuthState()
+        return { success: true, data: state }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Open GitHub OAuth URL in browser
@@ -113,14 +113,14 @@ export function registerGitHubHandlers(): void {
       scopes?: string[]
     ): Promise<ApiResponse<void>> => {
       try {
-        openOAuthUrl(clientId, scopes);
-        return { success: true };
+        openOAuthUrl(clientId, scopes)
+        return { success: true }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Fetch all accessible repositories
@@ -129,14 +129,14 @@ export function registerGitHubHandlers(): void {
     'github:getRepositories',
     async (_event: IpcMainInvokeEvent): Promise<ApiResponse<GitHubRepository[]>> => {
       try {
-        const repositories = await getRepositories();
-        return { success: true, data: repositories };
+        const repositories = await getRepositories()
+        return { success: true, data: repositories }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Fetch a specific repository
@@ -149,14 +149,14 @@ export function registerGitHubHandlers(): void {
       repo: string
     ): Promise<ApiResponse<GitHubRepository | null>> => {
       try {
-        const repository = await getRepository(owner, repo);
-        return { success: true, data: repository };
+        const repository = await getRepository(owner, repo)
+        return { success: true, data: repository }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Validate token has required scopes
@@ -168,12 +168,12 @@ export function registerGitHubHandlers(): void {
       requiredScopes?: string[]
     ): Promise<ApiResponse<{ valid: boolean; missingScopes: string[] }>> => {
       try {
-        const result = await validateTokenScopes(requiredScopes);
-        return { success: true, data: result };
+        const result = await validateTokenScopes(requiredScopes)
+        return { success: true, data: result }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 }

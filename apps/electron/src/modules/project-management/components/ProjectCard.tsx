@@ -38,11 +38,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       error: 'destructive',
     } as const
 
-    return (
-      <Badge variant={variants[project.status]}>
-        {project.status}
-      </Badge>
-    )
+    return <Badge variant={variants[project.status]}>{project.status}</Badge>
   }
 
   const formatLastOpened = () => {
@@ -75,7 +71,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   }
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-md transition-shadow py-6">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
@@ -85,13 +81,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 {project.name || `${project.github_owner}/${project.github_repo}`}
               </h3>
               {project.description && (
-                <p className="text-sm text-muted-foreground mb-1">
-                  {project.description}
-                </p>
+                <p className="text-sm text-muted-foreground mb-1">{project.description}</p>
               )}
               {project.github_repo ? (
                 <p className="text-sm text-muted-foreground">
-                  {project.github_owner}/{project.github_repo} • {project.is_private ? 'Private' : 'Public'} • {project.default_branch}
+                  {project.github_owner}/{project.github_repo} •{' '}
+                  {project.is_private ? 'Private' : 'Public'} • {project.default_branch}
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
@@ -119,9 +114,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               <TooltipTrigger asChild>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <ExternalLink className="h-4 w-4" />
-                  <span className="font-mono text-xs">
-                    {truncatePath(project.local_path)}
-                  </span>
+                  <span className="font-mono text-xs">{truncatePath(project.local_path)}</span>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -131,7 +124,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </TooltipProvider>
         </div>
 
-        <Button asChild className="w-full">
+        <Button asChild className="w-full bg-main">
           <Link to="/projects/$projectId" params={{ projectId: project.id }}>
             Open Board
           </Link>

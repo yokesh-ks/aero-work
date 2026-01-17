@@ -26,17 +26,15 @@ export function ThemeProvider({
   storageKey = 'mcp-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => {
-      const stored = localStorage.getItem(storageKey)
-      // Migrate 'system' to default theme
-      if (stored === 'system') {
-        localStorage.setItem(storageKey, defaultTheme)
-        return defaultTheme
-      }
-      return (stored as Theme) || defaultTheme
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = localStorage.getItem(storageKey)
+    // Migrate 'system' to default theme
+    if (stored === 'system') {
+      localStorage.setItem(storageKey, defaultTheme)
+      return defaultTheme
     }
-  )
+    return (stored as Theme) || defaultTheme
+  })
 
   useEffect(() => {
     const root = window.document.documentElement

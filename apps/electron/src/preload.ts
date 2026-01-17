@@ -1,7 +1,7 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron'
 import type {
   CreateProjectInput,
   ProjectFilter,
@@ -14,7 +14,7 @@ import type {
   DirectorySelectResult,
   FileSystemEntry,
   PathValidationResult,
-} from './types/project';
+} from './types/project'
 
 /**
  * Electron API exposed to renderer process via contextBridge
@@ -56,11 +56,9 @@ const electronAPI = {
     storeToken: (token: string): Promise<ApiResponse<boolean>> =>
       ipcRenderer.invoke('github:storeToken', token),
 
-    getToken: (): Promise<ApiResponse<string | null>> =>
-      ipcRenderer.invoke('github:getToken'),
+    getToken: (): Promise<ApiResponse<string | null>> => ipcRenderer.invoke('github:getToken'),
 
-    clearToken: (): Promise<ApiResponse<boolean>> =>
-      ipcRenderer.invoke('github:clearToken'),
+    clearToken: (): Promise<ApiResponse<boolean>> => ipcRenderer.invoke('github:clearToken'),
 
     isAuthenticated: (): Promise<ApiResponse<boolean>> =>
       ipcRenderer.invoke('github:isAuthenticated'),
@@ -87,7 +85,11 @@ const electronAPI = {
    * Git operations
    */
   git: {
-    clone: (owner: string, repo: string, targetPath: string): Promise<ApiResponse<GitOperationResult>> =>
+    clone: (
+      owner: string,
+      repo: string,
+      targetPath: string
+    ): Promise<ApiResponse<GitOperationResult>> =>
       ipcRenderer.invoke('git:clone', owner, repo, targetPath),
 
     validateRemote: (
@@ -107,11 +109,11 @@ const electronAPI = {
       dirPath: string
     ): Promise<
       ApiResponse<{
-        isClean: boolean;
-        current: string | null;
-        tracking: string | null;
-        ahead: number;
-        behind: number;
+        isClean: boolean
+        current: string | null
+        tracking: string | null
+        ahead: number
+        behind: number
       } | null>
     > => ipcRenderer.invoke('git:getStatus', dirPath),
 
@@ -152,10 +154,10 @@ const electronAPI = {
     getHomeDirectory: (): Promise<ApiResponse<string>> =>
       ipcRenderer.invoke('dialog:getHomeDirectory'),
   },
-};
+}
 
 // Expose the API to the renderer process
-contextBridge.exposeInMainWorld('electronAPI', electronAPI);
+contextBridge.exposeInMainWorld('electronAPI', electronAPI)
 
 // TypeScript type declaration for the exposed API
-export type ElectronAPI = typeof electronAPI;
+export type ElectronAPI = typeof electronAPI

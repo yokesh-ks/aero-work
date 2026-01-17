@@ -1,23 +1,23 @@
 /**
  * GitHub integration service using Octokit
  */
-import { Octokit } from '@octokit/rest';
-import { safeStorage, shell } from 'electron';
-import fs from 'node:fs';
-import path from 'node:path';
-import { app } from 'electron';
-import type { GitHubRepository, GitHubAuthState } from '../../types/project';
+import { Octokit } from '@octokit/rest'
+import { safeStorage, shell } from 'electron'
+import fs from 'node:fs'
+import path from 'node:path'
+import { app } from 'electron'
+import type { GitHubRepository, GitHubAuthState } from '../../types/project'
 
-const TOKEN_FILE_NAME = 'github-token.enc';
+const TOKEN_FILE_NAME = 'github-token.enc'
 
-let octokit: Octokit | null = null;
-let cachedToken: string | null = null;
+let octokit: Octokit | null = null
+let cachedToken: string | null = null
 
 /**
  * Get the path to the encrypted token file
  */
 function getTokenFilePath(): string {
-  return path.join(app.getPath('userData'), TOKEN_FILE_NAME);
+  return path.join(app.getPath('userData'), TOKEN_FILE_NAME)
 }
 
 /**
@@ -26,21 +26,21 @@ function getTokenFilePath(): string {
 export async function storeGitHubToken(token: string): Promise<boolean> {
   try {
     if (!safeStorage.isEncryptionAvailable()) {
-      console.warn('Safe storage encryption not available');
-      return false;
+      console.warn('Safe storage encryption not available')
+      return false
     }
 
-    const encryptedToken = safeStorage.encryptString(token);
-    const tokenPath = getTokenFilePath();
-    await fs.promises.writeFile(tokenPath, encryptedToken);
+    const encryptedToken = safeStorage.encryptString(token)
+    const tokenPath = getTokenFilePath()
+    await fs.promises.writeFile(tokenPath, encryptedToken)
 
-    cachedToken = token;
-    octokit = new Octokit({ auth: token });
+    cachedToken = token
+    octokit = new Octokit({ auth: token })
 
-    return true;
+    return true
   } catch (error) {
-    console.error('Failed to store GitHub token:', error);
-    return false;
+    console.error('Failed to store GitHub token:', error)
+    return false
   }
 }
 
@@ -49,33 +49,33 @@ export async function storeGitHubToken(token: string): Promise<boolean> {
  */
 export async function getGitHubToken(): Promise<string | null> {
   if (cachedToken) {
-    return cachedToken;
+    return cachedToken
   }
 
   try {
-    const tokenPath = getTokenFilePath();
+    const tokenPath = getTokenFilePath()
     const exists = await fs.promises
       .access(tokenPath, fs.constants.R_OK)
       .then(() => true)
-      .catch(() => false);
+      .catch(() => false)
 
     if (!exists) {
-      return null;
+      return null
     }
 
     if (!safeStorage.isEncryptionAvailable()) {
-      console.warn('Safe storage encryption not available');
-      return null;
+      console.warn('Safe storage encryption not available')
+      return null
     }
 
-    const encryptedToken = await fs.promises.readFile(tokenPath);
-    const token = safeStorage.decryptString(encryptedToken);
+    const encryptedToken = await fs.promises.readFile(tokenPath)
+    const token = safeStorage.decryptString(encryptedToken)
 
-    cachedToken = token;
-    return token;
+    cachedToken = token
+    return token
   } catch (error) {
-    console.error('Failed to retrieve GitHub token:', error);
-    return null;
+    console.error('Failed to retrieve GitHub token:', error)
+    return null
   }
 }
 
@@ -84,16 +84,16 @@ export async function getGitHubToken(): Promise<string | null> {
  */
 export async function clearGitHubToken(): Promise<boolean> {
   try {
-    const tokenPath = getTokenFilePath();
-    await fs.promises.unlink(tokenPath).catch(() => {});
+    const tokenPath = getTokenFilePath()
+    await fs.promises.unlink(tokenPath).catch(() => {})
 
-    cachedToken = null;
-    octokit = null;
+    cachedToken = null
+    octokit = null
 
-    return true;
+    return true
   } catch (error) {
-    console.error('Failed to clear GitHub token:', error);
-    return false;
+    console.error('Failed to clear GitHub token:', error)
+    return false
   }
 }
 
@@ -102,36 +102,36 @@ export async function clearGitHubToken(): Promise<boolean> {
  */
 export async function getOctokit(): Promise<Octokit | null> {
   if (octokit) {
-    return octokit;
+    return octokit
   }
 
-  const token = await getGitHubToken();
+  const token = await getGitHubToken()
   if (!token) {
-    return null;
+    return null
   }
 
-  octokit = new Octokit({ auth: token });
-  return octokit;
+  octokit = new Octokit({ auth: token })
+  return octokit
 }
 
 /**
  * Check if user is authenticated with GitHub
  */
 export async function isAuthenticated(): Promise<boolean> {
-  const token = await getGitHubToken();
+  const token = await getGitHubToken()
   if (!token) {
-    return false;
+    return false
   }
 
   try {
-    const client = await getOctokit();
-    if (!client) return false;
+    const client = await getOctokit()
+    if (!client) return false
 
-    await client.users.getAuthenticated();
-    return true;
+    await client.users.getAuthenticated()
+    return true
   } catch {
     // Token might be invalid/expired
-    return false;
+    return false
   }
 }
 
@@ -139,18 +139,18 @@ export async function isAuthenticated(): Promise<boolean> {
  * Get GitHub authentication state
  */
 export async function getAuthState(): Promise<GitHubAuthState> {
-  const token = await getGitHubToken();
+  const token = await getGitHubToken()
   if (!token) {
-    return { isAuthenticated: false };
+    return { isAuthenticated: false }
   }
 
   try {
-    const client = await getOctokit();
+    const client = await getOctokit()
     if (!client) {
-      return { isAuthenticated: false };
+      return { isAuthenticated: false }
     }
 
-    const { data: user } = await client.users.getAuthenticated();
+    const { data: user } = await client.users.getAuthenticated()
     return {
       isAuthenticated: true,
       user: {
@@ -158,9 +158,9 @@ export async function getAuthState(): Promise<GitHubAuthState> {
         avatar_url: user.avatar_url,
         name: user.name,
       },
-    };
+    }
   } catch {
-    return { isAuthenticated: false };
+    return { isAuthenticated: false }
   }
 }
 
@@ -168,29 +168,29 @@ export async function getAuthState(): Promise<GitHubAuthState> {
  * Open GitHub OAuth authorization URL in browser
  */
 export function openOAuthUrl(clientId: string, scopes: string[] = ['repo']): void {
-  const scopeString = scopes.join(' ');
-  const state = Math.random().toString(36).substring(7);
-  const redirectUri = 'aerowork://oauth/callback';
+  const scopeString = scopes.join(' ')
+  const state = Math.random().toString(36).substring(7)
+  const redirectUri = 'aerowork://oauth/callback'
 
-  const url = new URL('https://github.com/login/oauth/authorize');
-  url.searchParams.set('client_id', clientId);
-  url.searchParams.set('scope', scopeString);
-  url.searchParams.set('state', state);
-  url.searchParams.set('redirect_uri', redirectUri);
+  const url = new URL('https://github.com/login/oauth/authorize')
+  url.searchParams.set('client_id', clientId)
+  url.searchParams.set('scope', scopeString)
+  url.searchParams.set('state', state)
+  url.searchParams.set('redirect_uri', redirectUri)
 
-  shell.openExternal(url.toString());
+  shell.openExternal(url.toString())
 }
 
 /**
  * Fetch accessible repositories for the authenticated user
  */
 export async function getRepositories(): Promise<GitHubRepository[]> {
-  const client = await getOctokit();
+  const client = await getOctokit()
   if (!client) {
-    throw new Error('Not authenticated with GitHub');
+    throw new Error('Not authenticated with GitHub')
   }
 
-  const repositories: GitHubRepository[] = [];
+  const repositories: GitHubRepository[] = []
 
   // Fetch user repositories (owned and collaborator)
   const userRepos = await client.paginate(client.repos.listForAuthenticatedUser, {
@@ -198,11 +198,11 @@ export async function getRepositories(): Promise<GitHubRepository[]> {
     affiliation: 'owner,collaborator,organization_member',
     sort: 'updated',
     per_page: 100,
-  });
+  })
 
   for (const repo of userRepos) {
     // Skip archived repositories
-    if (repo.archived) continue;
+    if (repo.archived) continue
 
     repositories.push({
       id: repo.id,
@@ -226,32 +226,29 @@ export async function getRepositories(): Promise<GitHubRepository[]> {
             pull: repo.permissions.pull || false,
           }
         : undefined,
-    });
+    })
   }
 
   // Sort by name
-  repositories.sort((a, b) => a.full_name.localeCompare(b.full_name));
+  repositories.sort((a, b) => a.full_name.localeCompare(b.full_name))
 
-  return repositories;
+  return repositories
 }
 
 /**
  * Fetch a specific repository by owner and name
  */
-export async function getRepository(
-  owner: string,
-  repo: string
-): Promise<GitHubRepository | null> {
-  const client = await getOctokit();
+export async function getRepository(owner: string, repo: string): Promise<GitHubRepository | null> {
+  const client = await getOctokit()
   if (!client) {
-    throw new Error('Not authenticated with GitHub');
+    throw new Error('Not authenticated with GitHub')
   }
 
   try {
-    const { data } = await client.repos.get({ owner, repo });
+    const { data } = await client.repos.get({ owner, repo })
 
     if (data.archived) {
-      return null; // Don't allow archived repos
+      return null // Don't allow archived repos
     }
 
     return {
@@ -276,12 +273,12 @@ export async function getRepository(
             pull: data.permissions.pull || false,
           }
         : undefined,
-    };
+    }
   } catch (error) {
     if ((error as { status?: number }).status === 404) {
-      return null;
+      return null
     }
-    throw error;
+    throw error
   }
 }
 
@@ -291,27 +288,27 @@ export async function getRepository(
 export async function validateTokenScopes(
   requiredScopes: string[] = ['repo']
 ): Promise<{ valid: boolean; missingScopes: string[] }> {
-  const client = await getOctokit();
+  const client = await getOctokit()
   if (!client) {
-    return { valid: false, missingScopes: requiredScopes };
+    return { valid: false, missingScopes: requiredScopes }
   }
 
   try {
-    const response = await client.users.getAuthenticated();
-    const scopeHeader = response.headers['x-oauth-scopes'];
+    const response = await client.users.getAuthenticated()
+    const scopeHeader = response.headers['x-oauth-scopes']
 
     if (!scopeHeader) {
-      return { valid: false, missingScopes: requiredScopes };
+      return { valid: false, missingScopes: requiredScopes }
     }
 
-    const scopes = scopeHeader.split(',').map((s) => s.trim());
-    const missingScopes = requiredScopes.filter((s) => !scopes.includes(s));
+    const scopes = scopeHeader.split(',').map((s) => s.trim())
+    const missingScopes = requiredScopes.filter((s) => !scopes.includes(s))
 
     return {
       valid: missingScopes.length === 0,
       missingScopes,
-    };
+    }
   } catch {
-    return { valid: false, missingScopes: requiredScopes };
+    return { valid: false, missingScopes: requiredScopes }
   }
 }

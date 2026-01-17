@@ -1,2 +1,2 @@
-export * from './project';
-export * from './electron.d';
+export * from './project'
+export * from './electron.d'

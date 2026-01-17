@@ -9,15 +9,14 @@ export function ThemeToggle() {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
-  const getIcon = () => {
-    return theme === 'light'
-      ? <Sun className="h-[1.2rem] w-[1.2rem]" />
-      : <Moon className="h-[1.2rem] w-[1.2rem]" />
-  }
-
   return (
-    <Button variant="outline" size="icon" onClick={toggleTheme}>
-      {getIcon()}
+    <Button
+      size="icon"
+      onClick={toggleTheme}
+      className="size-9 p-0 [&_svg]:size-5 bg-secondary-background text-foreground border-2 border-border shadow-nav hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
+    >
+      <Sun className="hidden dark:inline stroke-foreground" />
+      <Moon className="inline dark:hidden stroke-foreground" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   )

@@ -13,17 +13,8 @@ import {
   AlertDescription,
   Textarea,
 } from '@aero-work/ui'
-import {
-  Loader2,
-  Github,
-  AlertCircle,
-  Lock,
-  Unlock,
-} from 'lucide-react'
-import {
-  getRepositories,
-  getAuthState,
-} from '../services/github-service'
+import { Loader2, Github, AlertCircle, Lock, Unlock } from 'lucide-react'
+import { getRepositories, getAuthState } from '../services/github-service'
 import { createProjectFromRepository } from '../services/project-service'
 import { FileBrowser } from './FileBrowser'
 import type { GitHubRepository, PathValidationResult } from '../../../types/project'
@@ -193,7 +184,7 @@ export function CreateProjectDialog({
     }
   }
 
-  const filteredRepos = repositories.filter(repo =>
+  const filteredRepos = repositories.filter((repo) =>
     repo.full_name.toLowerCase().includes(repoSearch.toLowerCase())
   )
 
@@ -237,7 +228,7 @@ export function CreateProjectDialog({
             )}
 
             <div className="flex gap-2">
-              <Button variant="outline" onClick={handleClose} className="flex-1">
+              <Button variant="destructive" onClick={handleClose} className="flex-1 bg-destructive">
                 Cancel
               </Button>
               <Button
@@ -254,20 +245,6 @@ export function CreateProjectDialog({
       case 'path-select':
         return (
           <div className="space-y-4">
-            <div>
-              <Label>Project Details</Label>
-              <Card>
-                <CardContent className="p-4">
-                  <h4 className="font-medium">{projectName}</h4>
-                  {projectDescription && (
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {projectDescription}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
             <div>
               <Label>Local Directory</Label>
               <FileBrowser
@@ -290,7 +267,12 @@ export function CreateProjectDialog({
               </Button>
               <Button
                 onClick={() => setStep('github-link')}
-                disabled={!localPath.trim() || !pathValidation?.exists || !pathValidation?.isDirectory || !pathValidation?.hasWritePermission}
+                disabled={
+                  !localPath.trim() ||
+                  !pathValidation?.exists ||
+                  !pathValidation?.isDirectory ||
+                  !pathValidation?.hasWritePermission
+                }
                 className="flex-1"
               >
                 Next
@@ -312,18 +294,11 @@ export function CreateProjectDialog({
 
             {!isAuthenticated ? (
               <div className="space-y-4">
-                <Button
-                  onClick={checkGitHubAuth}
-                  className="w-full"
-                >
+                <Button onClick={checkGitHubAuth} className="w-full">
                   <Github className="h-4 w-4 mr-2" />
                   Connect GitHub Account
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleCreateProject}
-                  className="w-full"
-                >
+                <Button variant="outline" onClick={handleCreateProject} className="w-full">
                   Skip & Create Project
                 </Button>
               </div>
@@ -368,9 +343,7 @@ export function CreateProjectDialog({
                             </Avatar>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <span className="font-medium truncate">
-                                  {repo.full_name}
-                                </span>
+                                <span className="font-medium truncate">{repo.full_name}</span>
                                 {repo.private ? (
                                   <Lock className="h-4 w-4 text-muted-foreground" />
                                 ) : (
@@ -383,9 +356,7 @@ export function CreateProjectDialog({
                                 </p>
                               )}
                             </div>
-                            <Badge variant="outline">
-                              {repo.default_branch}
-                            </Badge>
+                            <Badge variant="outline">{repo.default_branch}</Badge>
                           </div>
                         </CardContent>
                       </Card>
@@ -394,7 +365,11 @@ export function CreateProjectDialog({
                 </div>
 
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setStep('path-select')} className="flex-1">
+                  <Button
+                    variant="outline"
+                    onClick={() => setStep('path-select')}
+                    className="flex-1"
+                  >
                     Back
                   </Button>
                   <Button
@@ -406,11 +381,7 @@ export function CreateProjectDialog({
                   </Button>
                 </div>
 
-                <Button
-                  variant="ghost"
-                  onClick={handleCreateProject}
-                  className="w-full"
-                >
+                <Button variant="ghost" onClick={handleCreateProject} className="w-full">
                   Skip GitHub & Create Project
                 </Button>
               </div>
@@ -446,13 +417,13 @@ export function CreateProjectDialog({
   return (
     <>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-background p-6 rounded-lg max-w-md w-full mx-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay">
+          <div className="bg-secondary-background p-6 rounded-base border-2 border-border shadow-shadow max-w-md w-full mx-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Create New Project</h2>
+              <h2 className="text-lg font-heading">Create New Project</h2>
               <button
                 onClick={handleClose}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground size-8 flex items-center justify-center rounded-base border-2 border-transparent hover:border-border"
               >
                 ✕
               </button>

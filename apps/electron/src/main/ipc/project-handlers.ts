@@ -1,7 +1,7 @@
 /**
  * IPC handlers for project operations
  */
-import { ipcMain, IpcMainInvokeEvent } from 'electron';
+import { ipcMain, IpcMainInvokeEvent } from 'electron'
 import {
   listProjects,
   getProjectById,
@@ -11,14 +11,14 @@ import {
   deleteProject,
   projectExistsByGitHubRepoId,
   getProjectByGitHubRepoId,
-} from '../db/projects';
+} from '../db/projects'
 import type {
   CreateProjectInput,
   ProjectFilter,
   ProjectStatus,
   ApiResponse,
   Project,
-} from '../../types/project';
+} from '../../types/project'
 
 /**
  * Register all project-related IPC handlers
@@ -31,14 +31,14 @@ export function registerProjectHandlers(): void {
     'projects:list',
     async (_event: IpcMainInvokeEvent, filter?: ProjectFilter): Promise<ApiResponse<Project[]>> => {
       try {
-        const projects = listProjects(filter);
-        return { success: true, data: projects };
+        const projects = listProjects(filter)
+        return { success: true, data: projects }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Get a single project by ID
@@ -47,61 +47,71 @@ export function registerProjectHandlers(): void {
     'projects:getById',
     async (_event: IpcMainInvokeEvent, id: string): Promise<ApiResponse<Project | null>> => {
       try {
-        const project = getProjectById(id);
-        return { success: true, data: project };
+        const project = getProjectById(id)
+        return { success: true, data: project }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Get a project by GitHub repository ID
    */
   ipcMain.handle(
     'projects:getByGitHubRepoId',
-    async (_event: IpcMainInvokeEvent, githubRepoId: number): Promise<ApiResponse<Project | null>> => {
+    async (
+      _event: IpcMainInvokeEvent,
+      githubRepoId: number
+    ): Promise<ApiResponse<Project | null>> => {
       try {
-        const project = getProjectByGitHubRepoId(githubRepoId);
-        return { success: true, data: project };
+        const project = getProjectByGitHubRepoId(githubRepoId)
+        return { success: true, data: project }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Create a new project
    */
   ipcMain.handle(
     'projects:create',
-    async (_event: IpcMainInvokeEvent, input: CreateProjectInput): Promise<ApiResponse<Project>> => {
+    async (
+      _event: IpcMainInvokeEvent,
+      input: CreateProjectInput
+    ): Promise<ApiResponse<Project>> => {
       try {
-        console.log('IPC: Creating project with input:', input);
+        console.log('IPC: Creating project with input:', input)
 
         // Only check for existing GitHub repo if we're actually linking to GitHub
-        if (input.githubRepoId && input.githubRepoId > 0 && projectExistsByGitHubRepoId(input.githubRepoId)) {
-          console.log('IPC: GitHub repo already exists');
+        if (
+          input.githubRepoId &&
+          input.githubRepoId > 0 &&
+          projectExistsByGitHubRepoId(input.githubRepoId)
+        ) {
+          console.log('IPC: GitHub repo already exists')
           return {
             success: false,
             error: 'A project already exists for this GitHub repository',
-          };
+          }
         }
 
-        console.log('IPC: Calling createProject function');
-        const project = createProject(input);
-        console.log('IPC: Project created successfully:', project);
+        console.log('IPC: Calling createProject function')
+        const project = createProject(input)
+        console.log('IPC: Project created successfully:', project)
 
-        return { success: true, data: project };
+        return { success: true, data: project }
       } catch (error) {
-        console.error('IPC: Error creating project:', error);
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        console.error('IPC: Error creating project:', error)
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Update project status
@@ -114,17 +124,17 @@ export function registerProjectHandlers(): void {
       status: ProjectStatus
     ): Promise<ApiResponse<Project | null>> => {
       try {
-        const project = updateProjectStatus(id, status);
+        const project = updateProjectStatus(id, status)
         if (!project) {
-          return { success: false, error: 'Project not found' };
+          return { success: false, error: 'Project not found' }
         }
-        return { success: true, data: project };
+        return { success: true, data: project }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Update last opened timestamp
@@ -133,17 +143,17 @@ export function registerProjectHandlers(): void {
     'projects:updateLastOpened',
     async (_event: IpcMainInvokeEvent, id: string): Promise<ApiResponse<Project | null>> => {
       try {
-        const project = updateLastOpened(id);
+        const project = updateLastOpened(id)
         if (!project) {
-          return { success: false, error: 'Project not found' };
+          return { success: false, error: 'Project not found' }
         }
-        return { success: true, data: project };
+        return { success: true, data: project }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Delete a project
@@ -152,17 +162,17 @@ export function registerProjectHandlers(): void {
     'projects:delete',
     async (_event: IpcMainInvokeEvent, id: string): Promise<ApiResponse<boolean>> => {
       try {
-        const deleted = deleteProject(id);
+        const deleted = deleteProject(id)
         if (!deleted) {
-          return { success: false, error: 'Project not found' };
+          return { success: false, error: 'Project not found' }
         }
-        return { success: true, data: true };
+        return { success: true, data: true }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 
   /**
    * Check if a project exists for a GitHub repo
@@ -171,12 +181,12 @@ export function registerProjectHandlers(): void {
     'projects:existsByGitHubRepoId',
     async (_event: IpcMainInvokeEvent, githubRepoId: number): Promise<ApiResponse<boolean>> => {
       try {
-        const exists = projectExistsByGitHubRepoId(githubRepoId);
-        return { success: true, data: exists };
+        const exists = projectExistsByGitHubRepoId(githubRepoId)
+        return { success: true, data: exists }
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        return { success: false, error: message };
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        return { success: false, error: message }
       }
     }
-  );
+  )
 }

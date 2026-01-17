@@ -1,2 +1,2 @@
-export * from './project-service';
-export * from './github-service';
+export * from './project-service'
+export * from './github-service'

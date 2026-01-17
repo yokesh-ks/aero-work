@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-  Button,
-  Input,
-  ScrollArea,
-  Card,
-  CardContent,
-} from '@aero-work/ui'
+import { Button, Input, ScrollArea, Card, CardContent } from '@aero-work/ui'
 import {
   Folder,
   File,
@@ -98,7 +92,7 @@ export function FileBrowser({ selectedPath, onPathChange, validation }: FileBrow
     }
   }
 
-  const filteredEntries = entries.filter(entry =>
+  const filteredEntries = entries.filter((entry) =>
     entry.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
@@ -196,9 +190,7 @@ export function FileBrowser({ selectedPath, onPathChange, validation }: FileBrow
               </div>
             </div>
             {validation && (
-              <div className="text-xs text-muted-foreground mt-1">
-                {getValidationMessage()}
-              </div>
+              <div className="text-xs text-muted-foreground mt-1">{getValidationMessage()}</div>
             )}
           </CardContent>
         </Card>

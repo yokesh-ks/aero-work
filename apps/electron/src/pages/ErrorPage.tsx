@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@aero-work/ui'
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@aero-work/ui'
 import { Link } from '@tanstack/react-router'
 
 export default function ErrorPage({ error }: { error?: Error }) {

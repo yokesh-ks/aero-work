@@ -51,9 +51,9 @@ export default function ProjectsPage() {
   }
 
   const handleFilterChange = (key: keyof ProjectFilter, value: string | number | undefined) => {
-    setFilter(prev => ({
+    setFilter((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }))
   }
 
@@ -63,11 +63,9 @@ export default function ProjectsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Projects</h1>
-          <p className="text-muted-foreground">
-            Manage your projects and track their progress
-          </p>
+          <p className="text-muted-foreground">Manage your projects and track their progress</p>
         </div>
-        <Button onClick={handleCreateClick}>
+        <Button onClick={handleCreateClick} className="px-4">
           <Plus className="h-4 w-4 mr-2" />
           Create Project
         </Button>
@@ -100,7 +98,9 @@ export default function ProjectsPage() {
         </Select>
         <Select
           value={filter.recentDays?.toString() || 'all'}
-          onValueChange={(value) => handleFilterChange('recentDays', value === 'all' ? undefined : parseInt(value))}
+          onValueChange={(value) =>
+            handleFilterChange('recentDays', value === 'all' ? undefined : parseInt(value))
+          }
         >
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Recent" />

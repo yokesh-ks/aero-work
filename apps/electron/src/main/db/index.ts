@@ -1,18 +1,18 @@
 /**
  * SQLite database setup using better-sqlite3
  */
-import Database from 'better-sqlite3';
-import { app } from 'electron';
-import path from 'node:path';
+import Database from 'better-sqlite3'
+import { app } from 'electron'
+import path from 'node:path'
 
-let db: Database.Database | null = null;
+let db: Database.Database | null = null
 
 /**
  * Get the database file path
  */
 function getDatabasePath(): string {
-  const userDataPath = app.getPath('userData');
-  return path.join(userDataPath, 'aero-work.db');
+  const userDataPath = app.getPath('userData')
+  return path.join(userDataPath, 'aero-work.db')
 }
 
 /**
@@ -20,14 +20,14 @@ function getDatabasePath(): string {
  */
 export function initializeDatabase(): Database.Database {
   if (db) {
-    return db;
+    return db
   }
 
-  const dbPath = getDatabasePath();
-  db = new Database(dbPath);
+  const dbPath = getDatabasePath()
+  db = new Database(dbPath)
 
   // Enable WAL mode for better performance
-  db.pragma('journal_mode = WAL');
+  db.pragma('journal_mode = WAL')
 
   // Create projects table
   db.exec(`
@@ -45,16 +45,16 @@ export function initializeDatabase(): Database.Database {
       created_at TEXT NOT NULL,
       last_opened_at TEXT
     )
-  `);
+  `)
 
   // Create index for faster lookups
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_projects_github_repo_id ON projects(github_repo_id);
     CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status);
     CREATE INDEX IF NOT EXISTS idx_projects_last_opened ON projects(last_opened_at);
-  `);
+  `)
 
-  return db;
+  return db
 }
 
 /**
@@ -62,9 +62,9 @@ export function initializeDatabase(): Database.Database {
  */
 export function getDatabase(): Database.Database {
   if (!db) {
-    return initializeDatabase();
+    return initializeDatabase()
   }
-  return db;
+  return db
 }
 
 /**
@@ -72,9 +72,9 @@ export function getDatabase(): Database.Database {
  */
 export function closeDatabase(): void {
   if (db) {
-    db.close();
-    db = null;
+    db.close()
+    db = null
   }
 }
 
-export { db };
+export { db }

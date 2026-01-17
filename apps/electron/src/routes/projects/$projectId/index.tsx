@@ -12,16 +12,12 @@ function ProjectBoard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Project Board</h1>
-          <p className="text-muted-foreground">
-            Kanban board for project {projectId}
-          </p>
+          <p className="text-muted-foreground">Kanban board for project {projectId}</p>
         </div>
       </div>
 
       <div className="text-center py-12">
-        <p className="text-muted-foreground">
-          Project board implementation coming soon...
-        </p>
+        <p className="text-muted-foreground">Project board implementation coming soon...</p>
       </div>
     </div>
   )
