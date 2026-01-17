@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import {
   Button,
   Card,
@@ -6,15 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@aero-work/ui'
+import { FolderGit2, ArrowRight } from 'lucide-react'
 import { useTheme } from '../components/ThemeProvider'
 import logoDark from '../assets/logo.png'
 import logoLight from '../assets/logo-light.png'
 
 export default function Home() {
   const { theme } = useTheme()
-  const isDark =
-    theme === 'dark' ||
-    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  const isDark = theme === 'dark'
 
   return (
     <div className="flex items-center justify-center p-4 h-full overflow-auto">
@@ -34,6 +34,13 @@ export default function Home() {
           <p className="text-muted-foreground text-center">
             Start creating amazing projects with our powerful tools.
           </p>
+          <Button asChild className="w-full">
+            <Link to="/projects" className="inline-flex items-center justify-center gap-2">
+              <FolderGit2 className="h-4 w-4" />
+              Go to Projects
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </CardContent>
       </Card>
     </div>
