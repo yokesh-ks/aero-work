@@ -1,11 +1,17 @@
 import path from 'node:path'
 import { BrowserWindow, app } from 'electron'
 import started from 'electron-squirrel-startup'
+import { initializeDatabase, closeDatabase } from './main/db'
+import { registerAllIpcHandlers } from './main/ipc'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit()
 }
+
+// Initialize database and register IPC handlers
+initializeDatabase()
+registerAllIpcHandlers()
 
 // Set app icon for dock/taskbar
 if (process.platform === 'darwin') {
@@ -72,6 +78,11 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+// Clean up database connection before quitting
+app.on('before-quit', () => {
+  closeDatabase()
 })
 
 app.on('activate', () => {
