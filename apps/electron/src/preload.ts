@@ -12,6 +12,8 @@ import type {
   GitHubAuthState,
   GitOperationResult,
   DirectorySelectResult,
+  FileSystemEntry,
+  PathValidationResult,
 } from './types/project';
 
 /**
@@ -140,6 +142,15 @@ const electronAPI = {
 
     showError: (title: string, content: string): Promise<ApiResponse<void>> =>
       ipcRenderer.invoke('dialog:showError', title, content),
+
+    listDirectory: (dirPath: string): Promise<ApiResponse<FileSystemEntry[]>> =>
+      ipcRenderer.invoke('dialog:listDirectory', dirPath),
+
+    validatePath: (dirPath: string): Promise<ApiResponse<PathValidationResult>> =>
+      ipcRenderer.invoke('dialog:validatePath', dirPath),
+
+    getHomeDirectory: (): Promise<ApiResponse<string>> =>
+      ipcRenderer.invoke('dialog:getHomeDirectory'),
   },
 };
 

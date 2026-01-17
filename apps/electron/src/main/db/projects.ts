@@ -16,6 +16,8 @@ import type {
 function rowToProject(row: Record<string, unknown>): Project {
   return {
     id: row.id as string,
+    name: row.name as string | null,
+    description: row.description as string | null,
     github_owner: row.github_owner as string,
     github_repo: row.github_repo as string,
     github_repo_id: row.github_repo_id as number,
@@ -89,40 +91,7 @@ export function getProjectByGitHubRepoId(githubRepoId: number): Project | null {
   return row ? rowToProject(row) : null;
 }
 
-/**
- * Create a new project
- */
-export function createProject(input: CreateProjectInput): Project {
-  const db = getDatabase();
 
-  const id = uuidv4();
-  const now = new Date().toISOString();
-
-  const stmt = db.prepare(`
-    INSERT INTO projects (
-      id, github_owner, github_repo, github_repo_id, local_path,
-      status, is_private, default_branch, created_at, last_opened_at
-    ) VALUES (
-      @id, @github_owner, @github_repo, @github_repo_id, @local_path,
-      @status, @is_private, @default_branch, @created_at, @last_opened_at
-    )
-  `);
-
-  stmt.run({
-    id,
-    github_owner: input.githubOwner,
-    github_repo: input.githubRepo,
-    github_repo_id: input.githubRepoId,
-    local_path: input.localPath,
-    status: 'linked',
-    is_private: input.isPrivate ? 1 : 0,
-    default_branch: input.defaultBranch,
-    created_at: now,
-    last_opened_at: null,
-  });
-
-  return getProjectById(id)!;
-}
 
 /**
  * Update project status
@@ -156,18 +125,58 @@ export function updateLastOpened(id: string): Project | null {
 }
 
 /**
- * Update project local path
+ * Create a new project
  */
-export function updateProjectLocalPath(id: string, localPath: string): Project | null {
-  const db = getDatabase();
-  const stmt = db.prepare('UPDATE projects SET local_path = ? WHERE id = ?');
-  const result = stmt.run(localPath, id);
+export function createProject(input: CreateProjectInput): Project {
+  console.log('DB: createProject called with input:', input);
 
-  if (result.changes === 0) {
-    return null;
+  const db = getDatabase();
+  console.log('DB: Got database connection');
+
+  const id = uuidv4();
+  const now = new Date().toISOString();
+
+  console.log('DB: Generated ID:', id);
+
+  const stmt = db.prepare(`
+    INSERT INTO projects (
+      id, name, description, github_owner, github_repo, github_repo_id, local_path,
+      status, is_private, default_branch, created_at, last_opened_at
+    ) VALUES (
+      @id, @name, @description, @github_owner, @github_repo, @github_repo_id, @local_path,
+      @status, @is_private, @default_branch, @created_at, @last_opened_at
+    )
+  `);
+
+  const params = {
+    id,
+    name: input.name || null,
+    description: input.description || null,
+    github_owner: input.githubOwner || '',
+    github_repo: input.githubRepo || '',
+    github_repo_id: input.githubRepoId || 0,
+    local_path: input.localPath,
+    status: 'linked',
+    is_private: input.isPrivate ? 1 : 0,
+    default_branch: input.defaultBranch || 'main',
+    created_at: now,
+    last_opened_at: null,
+  };
+
+  console.log('DB: Running INSERT with params:', params);
+
+  const result = stmt.run(params);
+  console.log('DB: INSERT result:', result);
+
+  console.log('DB: Retrieving created project by ID:', id);
+  const project = getProjectById(id);
+  console.log('DB: Retrieved project:', project);
+
+  if (!project) {
+    throw new Error('Failed to retrieve created project');
   }
 
-  return getProjectById(id);
+  return project;
 }
 
 /**

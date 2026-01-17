@@ -33,6 +33,8 @@ export function initializeDatabase(): Database.Database {
   db.exec(`
     CREATE TABLE IF NOT EXISTS projects (
       id TEXT PRIMARY KEY,
+      name TEXT,
+      description TEXT,
       github_owner TEXT NOT NULL,
       github_repo TEXT NOT NULL,
       github_repo_id INTEGER NOT NULL UNIQUE,

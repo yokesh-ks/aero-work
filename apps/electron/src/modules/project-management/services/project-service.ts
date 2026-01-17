@@ -44,7 +44,7 @@ export async function getProjectByGitHubRepoId(githubRepoId: number): Promise<Pr
 }
 
 /**
- * Create a new project from a GitHub repository
+ * Create a new project
  */
 export async function createProject(input: CreateProjectInput): Promise<Project> {
   const response = await window.electronAPI.projects.create(input);
@@ -110,7 +110,9 @@ export async function projectExistsByGitHubRepoId(githubRepoId: number): Promise
  */
 export async function createProjectFromRepository(
   repository: GitHubRepository,
-  localPath: string
+  localPath: string,
+  name?: string,
+  description?: string
 ): Promise<Project> {
   // Check if project already exists
   const exists = await projectExistsByGitHubRepoId(repository.id);
@@ -189,6 +191,8 @@ export async function createProjectFromRepository(
 
   // Create the project record
   const project = await createProject({
+    name,
+    description,
     githubOwner: repository.owner.login,
     githubRepo: repository.name,
     githubRepoId: repository.id,

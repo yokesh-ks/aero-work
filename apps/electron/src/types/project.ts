@@ -12,6 +12,8 @@ export type ProjectStatus = 'linked' | 'cloning' | 'error';
  */
 export interface Project {
   id: string;
+  name: string | null;
+  description: string | null;
   github_owner: string;
   github_repo: string;
   github_repo_id: number;
@@ -27,6 +29,8 @@ export interface Project {
  * Input for creating a new project
  */
 export interface CreateProjectInput {
+  name?: string;
+  description?: string;
   githubOwner: string;
   githubRepo: string;
   githubRepoId: number;
@@ -106,5 +110,27 @@ export interface GitHubAuthState {
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
+  error?: string;
+}
+
+/**
+ * File system entry for directory listing
+ */
+export interface FileSystemEntry {
+  name: string;
+  path: string;
+  type: 'file' | 'directory';
+  size?: number;
+  modified?: string;
+}
+
+/**
+ * Path validation result
+ */
+export interface PathValidationResult {
+  exists: boolean;
+  isDirectory: boolean;
+  hasWritePermission: boolean;
+  hasGit: boolean;
   error?: string;
 }

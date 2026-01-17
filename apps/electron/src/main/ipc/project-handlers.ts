@@ -79,17 +79,24 @@ export function registerProjectHandlers(): void {
     'projects:create',
     async (_event: IpcMainInvokeEvent, input: CreateProjectInput): Promise<ApiResponse<Project>> => {
       try {
-        // Check if project already exists for this repo
-        if (projectExistsByGitHubRepoId(input.githubRepoId)) {
+        console.log('IPC: Creating project with input:', input);
+
+        // Only check for existing GitHub repo if we're actually linking to GitHub
+        if (input.githubRepoId && input.githubRepoId > 0 && projectExistsByGitHubRepoId(input.githubRepoId)) {
+          console.log('IPC: GitHub repo already exists');
           return {
             success: false,
             error: 'A project already exists for this GitHub repository',
           };
         }
 
+        console.log('IPC: Calling createProject function');
         const project = createProject(input);
+        console.log('IPC: Project created successfully:', project);
+
         return { success: true, data: project };
       } catch (error) {
+        console.error('IPC: Error creating project:', error);
         const message = error instanceof Error ? error.message : 'Unknown error';
         return { success: false, error: message };
       }
